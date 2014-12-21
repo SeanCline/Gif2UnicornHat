@@ -15,6 +15,7 @@ using namespace std;
 
 namespace Gif2UnicornHat {
 
+	bool UnicornHat::alreadyShutdown = false;
 
 	UnicornHat& UnicornHat::instance()
 	{
@@ -34,6 +35,7 @@ namespace Gif2UnicornHat {
 
 	UnicornHat::~UnicornHat()
 	{
+		shutdown();
 	}
 	
 
@@ -51,6 +53,7 @@ namespace Gif2UnicornHat {
 		show();
 	}
 
+	
 	int UnicornHat::getPixelIndex(int x, int y)
 	{
 		const static int indicies[8][8] = {
@@ -67,23 +70,36 @@ namespace Gif2UnicornHat {
 		return indicies[x][y];
 	}
 	
+	
 	void UnicornHat::registerExitHandler()
 	{
-		auto onExit = [](int status) {
-			cout << "Exiting..." << endl;
-			for (int i = 0; i < 64; ++i) {
-				setPixelColor(i, 0, 0, 0);
-			}
-			show();
-			terminate(status);
+		auto onSignal = [](int) {
+			shutdown();
 		};
 
 		for (int i = 0; i < 64; ++i) {
 			struct sigaction sa;
 			memset(&sa, 0, sizeof(struct sigaction));
-			sa.sa_handler = onExit;
+			sa.sa_handler = onSignal;
 			sigaction(i, &sa, nullptr);
 		}
+	}
+	
+	
+	void UnicornHat::shutdown()
+	{
+		// Don't run termination logic more than once.
+		if (alreadyShutdown) {
+			return;
+		}
+		alreadyShutdown = true;
+		
+		cout << "Exiting..." << endl;
+		for (int i = 0; i < 64; ++i) {
+			setPixelColor(i, 0, 0, 0);
+		}
+		show();
+		terminate(0);
 	}
 	
 }

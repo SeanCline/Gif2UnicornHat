@@ -18,6 +18,8 @@ namespace Gif2UnicornHat {
 		private: // Helpers.
 			int getPixelIndex(int x, int y);
 			void registerExitHandler();
+			static bool alreadyShutdown;
+			static void shutdown();
 			
 	};
 
