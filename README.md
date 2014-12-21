@@ -11,10 +11,8 @@ Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/un
 ##Clone and build Gif2UnicornHat##
 
 	cd ~
-	git clone https://github.com/SeanCline/Gif2UnicornHat.git
+	git clone --recursive https://github.com/SeanCline/Gif2UnicornHat.git
 	cd Gif2UnicornHat
-	git submodule init
-	git submodule update
 	make dependencies && make
 
 
