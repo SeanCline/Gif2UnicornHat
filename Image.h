@@ -3,7 +3,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	class Image {
 	public: // Construction.

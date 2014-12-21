@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	Image::Image(Dimension width, Dimension height, Color background /*=Color()*/)
 		: width_(width),

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <vector>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	struct AnimationFrame {
 		Image image;

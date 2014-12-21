@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <limits>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	const Color Color::Transparent = {0, 0, 0, 0};
 	const Color Color::White = {255, 255, 255};

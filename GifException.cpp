@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	GifException::GifException()
 		: runtime_error("Gif Error: " + GifLastError()),

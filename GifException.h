@@ -1,7 +1,7 @@
 #pragma once
 #include <stdexcept>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	class GifException : public std::runtime_error {
 	public:

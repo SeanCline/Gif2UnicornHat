@@ -5,7 +5,7 @@
 
 class GifFileType;
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	class Gif {
 	public: // Construction/Destruction.

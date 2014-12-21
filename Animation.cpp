@@ -7,7 +7,7 @@
 using namespace std;
 using namespace std::chrono;
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	AnimationFrame::AnimationFrame(const Image& image, const milliseconds& ms)
 		: image(image),

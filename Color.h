@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <limits>
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	struct Color {
 		typedef uint8_t SubpixelType;

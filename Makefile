@@ -9,7 +9,7 @@ define print
 endef
 
 # Project information.
-SOURCES = main.cpp Gif.cpp GifException.cpp Image.cpp Animation.cpp Color.cpp
+SOURCES = main.cpp Gif.cpp GifException.cpp Image.cpp Animation.cpp Color.cpp UnicornHat.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = Gif2UnicornHat
 LIBRARY = libGif2UnicornHat.a

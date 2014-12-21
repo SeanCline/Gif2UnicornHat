@@ -13,7 +13,7 @@
 #include <memory>
 #include <utility>
 
-using namespace GifLoader;
+using namespace Gif2UnicornHat;
 using namespace std;
 using namespace std::chrono;
 
@@ -117,7 +117,7 @@ namespace {
 	}
 }
 
-namespace GifLoader {
+namespace Gif2UnicornHat {
 
 	Gif Gif::fromFile(const std::string& path, Color defaultBackground /*= Color()*/)
 	{
