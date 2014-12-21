@@ -11,6 +11,7 @@ endef
 # Project information.
 SOURCES = main.cpp Gif.cpp GifException.cpp Image.cpp Animation.cpp Color.cpp UnicornHat.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
+LIBRARYOBJECTS = $(filter-out main.o, $(OBJECTS))
 EXECUTABLE = Gif2UnicornHat
 LIBRARY = libGif2UnicornHat.a
 
@@ -37,13 +38,13 @@ dependencies:
 
 $(EXECUTABLE): $(OBJECTS)
 	$(call print, "Linking $(OBJECTS) into executable $@")
-	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+	@$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
-$(LIBRARY): $(OBJECTS)
-	$(call print, "Archiving $(OBJECTS) into library $@")
-	$(AR) rcs $@ $(OBJECTS)
+$(LIBRARY): $(LIBRARYOBJECTS)
+	$(call print, "Archiving $(LIBRARYOBJECTS) into library $@")
+	@$(AR) rcs $@ $(LIBRARYOBJECTS)
 	
 clean:
 	$(call print, "Cleaning...")
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	@rm -f $(OBJECTS) $(EXECUTABLE)
 	$(call print, "Done cleaning.")
