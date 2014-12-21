@@ -1,4 +1,5 @@
 CXX = g++
+AR = ar
 
 # Colourized output. Call with: $(call print, "z0mg t3h culurz!")
 define print
@@ -11,6 +12,7 @@ endef
 SOURCES = main.cpp Gif.cpp GifException.cpp Image.cpp Animation.cpp Color.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = Gif2UnicornHat
+LIBRARY = libGif2UnicornHat.a
 
 # 3rd Party Libraries
 WS2812PATH = ./UnicornHat/python/ws2812/lib/
@@ -21,10 +23,10 @@ OPTIMIZATION_LEVEL = -O0 -g -ggdb
 WARNINGS = -Wall -Wextra -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wunreachable-code
 STRICTNESS = -pedantic
 INCLUDES += -isystem $(WS2812PATH)
-CXXFLAGS = -std=c++11 -D_POSIX_SOURCE $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
+CXXFLAGS = -std=c++11 -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
 
 # Targets
-all: $(SOURCES) $(EXECUTABLE)
+all: $(SOURCES) $(EXECUTABLE) $(LIBRARY)
 
 dependencies:
 	make -C $(WS2812PATH)
@@ -34,9 +36,13 @@ dependencies:
 	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(EXECUTABLE): $(OBJECTS)
-	$(call print, "Linking $(OBJECTS) into $@")
+	$(call print, "Linking $(OBJECTS) into executable $@")
 	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
+$(LIBRARY): $(OBJECTS)
+	$(call print, "Archiving $(OBJECTS) into library $@")
+	$(AR) rcs $@ $(OBJECTS)
+	
 clean:
 	$(call print, "Cleaning...")
 	rm -f $(OBJECTS) $(EXECUTABLE)
