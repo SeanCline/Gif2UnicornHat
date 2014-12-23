@@ -19,18 +19,11 @@ int main(int argc, char *argv[])
 		if (argc < 2) {
 			cerr << "Missing gif file argument." << endl;
 		}
-	
-		
-		Gif gif = Gif::fromFile(argv[1]);
+
 		UnicornHat& hat = UnicornHat::instance();
 		
-		for (int loopNum = 0; loopNum < gif.numLoops() || gif.numLoops() == 0; ++loopNum) {
-			for (auto&& frame : gif.frames()) {
-				hat.showImage(frame.image);
-				this_thread::sleep_for(frame.duration);
-			}
-		}
-		
+		Gif gif = Gif::fromFile(argv[1]);
+		hat.playAnimation(gif.getAnimation());
 		
 	} catch (exception& ex) {
 		cerr << "Exception unwound to main. Details: " << ex.what() << endl;

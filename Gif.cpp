@@ -2,6 +2,7 @@
 #include "GifException.h"
 #include "Color.h"
 #include "Image.h"
+#include "Animation.h"
 
 #include <gif_lib.h>
 
@@ -234,18 +235,6 @@ namespace Gif2UnicornHat {
 		return animation_.numFrames() > 0;
 	}
 
-	
-	int Gif::numLoops() const
-	{
-		return animation_.numLoops();
-	}
-	
-
-	const Animation::FrameList& Gif::frames() const
-	{
-		return animation_.frames();
-	}
-
 
 	const Image& Gif::getStaticImage() const
 	{
@@ -256,4 +245,9 @@ namespace Gif2UnicornHat {
 		return animation_.frames().front().image;
 	}
 
+	
+	const Animation& Gif::getAnimation() const
+	{
+		return animation_;
+	}
 }

@@ -1,5 +1,6 @@
 #include "UnicornHat.h"
 #include "Image.h"
+#include "Animation.h"
 
 extern "C" {
 #include <ws2812-RPi.h>
@@ -9,7 +10,8 @@ extern "C" {
 #include <signal.h>
 
 #include <stdexcept>
-#include <iostream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -19,13 +21,14 @@ namespace Gif2UnicornHat {
 
 	UnicornHat& UnicornHat::instance()
 	{
-		static UnicornHat hat = UnicornHat();
+		static UnicornHat hat;
 		return hat;
 	}
 
 
 	UnicornHat::UnicornHat()
 	{
+		// Initialize ws2812-RPi.
 		::numLEDs = 64;
 		::initHardware();
 		::clearLEDBuffer();
@@ -38,21 +41,6 @@ namespace Gif2UnicornHat {
 		shutdown();
 	}
 	
-
-	void UnicornHat::showImage(const Image& img)
-	{
-		if (img.width() > 8 || img.height() > 8) {
-			throw invalid_argument("Image is too big for the UnicornHat. An image must be 8x8 pixels to be sent to the hat.");
-		}
-		
-		for (Image::Dimension x = 0; x < img.width(); ++x) {
-			for (Image::Dimension y = 0; y < img.height(); ++y) {
-				::setPixelColor(getPixelIndex(x, y), img[x][y].r, img[x][y].g, img[x][y].b);
-			}
-		}
-		::show();
-	}
-
 	
 	void UnicornHat::setBrightness(double brightness)
 	{
@@ -63,8 +51,34 @@ namespace Gif2UnicornHat {
 		::setBrightness(brightness);
 	}
 	
+
+	void UnicornHat::showImage(const Image& image)
+	{
+		if (image.width() > 8 || image.height() > 8) {
+			throw invalid_argument("Image is too big for the UnicornHat. An image must be 8x8 pixels to be sent to the hat.");
+		}
+		
+		for (Image::Dimension x = 0; x < image.width(); ++x) {
+			for (Image::Dimension y = 0; y < image.height(); ++y) {
+				::setPixelColor(getPixelIndex(x, y), image[x][y].r, image[x][y].g, image[x][y].b);
+			}
+		}
+		::show();
+	}
+
 	
-	int UnicornHat::getPixelIndex(int x, int y)
+	void UnicornHat::playAnimation(const Animation& animation)
+	{
+		for (int loopNum = 0; loopNum < animation.numLoops() || animation.numLoops() == 0; ++loopNum) {
+			for (auto&& frame : animation.frames()) {
+				showImage(frame.image);
+				this_thread::sleep_for(frame.duration);
+			}
+		}
+	}
+	
+	
+	int UnicornHat::getPixelIndex(int x, int y) const
 	{
 		const static int indicies[8][8] = {
 			{0,  1,  2,  3,  4,   5,  6,  7},
@@ -87,7 +101,7 @@ namespace Gif2UnicornHat {
 	}
 	
 	
-	void UnicornHat::registerExitHandler()
+	void UnicornHat::registerExitHandler() const
 	{
 		for (int i = 0; i < 64; ++i) {
 			struct sigaction sa;
@@ -106,7 +120,6 @@ namespace Gif2UnicornHat {
 		}
 		alreadyShutdown = true;
 		
-		cout << "Exiting..." << endl;
 		for (int i = 0; i < 64; ++i) {
 			::setPixelColor(i, 0, 0, 0);
 		}

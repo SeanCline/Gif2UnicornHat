@@ -18,11 +18,10 @@ namespace Gif2UnicornHat {
 		Image::Dimension height() const;
 		Image::Dimension width() const;
 		bool isAnimated() const;
-		int numLoops() const;
 	
 	public: // Image access.
-		const Animation::FrameList& frames() const;
 		const Image& getStaticImage() const;
+		const Animation& getAnimation() const;
 	
 	private: // Data.
 		Image::Dimension width_;
