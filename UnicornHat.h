@@ -14,6 +14,7 @@ namespace Gif2UnicornHat {
 		
 		public: // Methods.
 			void showImage(const Image&);
+			void setBrightness(double);
 			
 		private: // Helpers.
 			int getPixelIndex(int x, int y);

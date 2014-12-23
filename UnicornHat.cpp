@@ -26,10 +26,10 @@ namespace Gif2UnicornHat {
 
 	UnicornHat::UnicornHat()
 	{
-		numLEDs = 64;
-		initHardware();
-		clearLEDBuffer();
-		setBrightness(DEFAULT_BRIGHTNESS);
+		::numLEDs = 64;
+		::initHardware();
+		::clearLEDBuffer();
+		::setBrightness(DEFAULT_BRIGHTNESS);
 		registerExitHandler();
 	}
 
@@ -42,17 +42,27 @@ namespace Gif2UnicornHat {
 	void UnicornHat::showImage(const Image& img)
 	{
 		if (img.width() > 8 || img.height() > 8) {
-			throw runtime_error("Image is too big for the UnicornHat. An image must be 8x8 pixels to be sent to the hat.");
+			throw invalid_argument("Image is too big for the UnicornHat. An image must be 8x8 pixels to be sent to the hat.");
 		}
 		
 		for (Image::Dimension x = 0; x < img.width(); ++x) {
 			for (Image::Dimension y = 0; y < img.height(); ++y) {
-				setPixelColor(getPixelIndex(x, y), img[x][y].r, img[x][y].g, img[x][y].b);
+				::setPixelColor(getPixelIndex(x, y), img[x][y].r, img[x][y].g, img[x][y].b);
 			}
 		}
-		show();
+		::show();
 	}
 
+	
+	void UnicornHat::setBrightness(double brightness)
+	{
+		if (brightness < 0 || brightness > 1) {
+			throw invalid_argument("Brightness must be between 0.0 and 1.0");
+		}
+		
+		::setBrightness(brightness);
+	}
+	
 	
 	int UnicornHat::getPixelIndex(int x, int y)
 	{
@@ -73,7 +83,7 @@ namespace Gif2UnicornHat {
 	
 	void UnicornHat::onSignal(int)
 	{
-		Gif2UnicornHat::UnicornHat::shutdown();
+		shutdown();
 	}
 	
 	
@@ -98,10 +108,10 @@ namespace Gif2UnicornHat {
 		
 		cout << "Exiting..." << endl;
 		for (int i = 0; i < 64; ++i) {
-			setPixelColor(i, 0, 0, 0);
+			::setPixelColor(i, 0, 0, 0);
 		}
-		show();
-		terminate(0);
+		::show();
+		::terminate(0);
 	}
 	
 }
