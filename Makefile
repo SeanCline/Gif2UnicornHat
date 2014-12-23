@@ -46,5 +46,5 @@ $(LIBRARY): $(LIBRARYOBJECTS)
 	
 clean:
 	$(call print, "Cleaning...")
-	@rm -f $(OBJECTS) $(EXECUTABLE)
+	@rm -f $(OBJECTS) $(EXECUTABLE) $(LIBRARY)
 	$(call print, "Done cleaning.")
