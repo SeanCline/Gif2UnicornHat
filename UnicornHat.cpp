@@ -71,12 +71,14 @@ namespace Gif2UnicornHat {
 	}
 	
 	
+	void UnicornHat::onSignal(int)
+	{
+		Gif2UnicornHat::UnicornHat::shutdown();
+	}
+	
+	
 	void UnicornHat::registerExitHandler()
 	{
-		auto onSignal = [](int) {
-			shutdown();
-		};
-
 		for (int i = 0; i < 64; ++i) {
 			struct sigaction sa;
 			memset(&sa, 0, sizeof(struct sigaction));

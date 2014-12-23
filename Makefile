@@ -24,7 +24,7 @@ OPTIMIZATION_LEVEL = -O0 -g -ggdb
 WARNINGS = -Wall -Wextra -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wunreachable-code
 STRICTNESS = -pedantic
 INCLUDES += -isystem $(WS2812PATH)
-CXXFLAGS = -std=c++11 -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
+CXXFLAGS = -std=c++0x -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
 
 # Targets
 all: $(SOURCES) $(EXECUTABLE) $(LIBRARY)

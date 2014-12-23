@@ -12,8 +12,15 @@ namespace Gif2UnicornHat {
 	AnimationFrame::AnimationFrame(const Image& image, const milliseconds& ms)
 		: image(image),
 		  duration(ms)
-	{ }
+	{
+	}
 
+	
+	Animation::Animation()
+		 : numLoops_(0)
+	{
+	}
+	
 
 	const Animation::FrameList& Animation::frames() const
 	{

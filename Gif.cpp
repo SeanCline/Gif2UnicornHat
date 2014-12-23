@@ -90,16 +90,18 @@ namespace {
 		enum DisposalMethod {
 			NotSpecified = 0, DoNotDispose, RestoreToBackground, RestoreToPrevious
 		};
+
+		DisposalMethod disposalMethod;
+		bool userInputFlag;
+		bool transparentColorFlag;
+		milliseconds delayTime;
+		int transparentColorIndex;
 		
-		DisposalMethod disposalMethod = NotSpecified;
-		bool userInputFlag = false;
-		bool transparentColorFlag = false;
-		milliseconds delayTime = milliseconds(0);
-		int transparentColorIndex = 0;
+		static GraphicsControlBlock fromBytes(GifByteType* extData);
 	};
 	
 	
-	GraphicsControlBlock readGraphicsControlBlock(GifByteType* extData)
+	GraphicsControlBlock GraphicsControlBlock::fromBytes(GifByteType* extData)
 	{
 		GraphicsControlBlock gcb;
 		
@@ -190,7 +192,7 @@ namespace Gif2UnicornHat {
 						}
 					}
 				} else if (extCode == GRAPHICS_EXT_FUNC_CODE) { //< Stores frame delay for each image.
-					gcb = readGraphicsControlBlock(extData);
+					gcb = GraphicsControlBlock::fromBytes(extData);
 				}
 				
 				// Skip any other extension blocks.

@@ -13,6 +13,9 @@ namespace Gif2UnicornHat {
 	};
 
 	class Animation {
+	public: // Construction.
+		Animation();
+	
 	public: // Frame getters and setters.
 		typedef std::vector<AnimationFrame> FrameList;
 		const FrameList& frames() const;
@@ -26,7 +29,7 @@ namespace Gif2UnicornHat {
 		int numFrames() const;
 		
 	private: //< Data.
-		int numLoops_ = 0;
+		int numLoops_;
 		FrameList frames_;
 	};
 
