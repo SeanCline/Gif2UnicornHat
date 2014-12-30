@@ -184,10 +184,10 @@ namespace Gif2UnicornHat {
 				if (extCode == APPLICATION_EXT_FUNC_CODE) //< Stores loop count animated images.
 				{
 					auto extString = string(extData+1, extData+12);
-					if (extString == "NETSCAPE2.0") { //< Is this the animation extension record?
+					if (extString == "NETSCAPE2.0" || extString == "ANIMEXTS1.0") { //< Is this the animation extension record?
 						// The number of loops is in the next extension record, but don't fail if it isn't there.
 						if (DGifGetExtensionNext(file.get(), &extData) != GIF_ERROR) {
-							if (extData[0] == 3) {
+							if (extData[0] == 3 && extData[1] == 1) {
 								animation.setNumLoops(combineBytesToInt(extData[2], extData[3]));
 							}
 						}
