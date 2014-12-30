@@ -103,11 +103,16 @@ namespace Gif2UnicornHat {
 	
 	void UnicornHat::registerExitHandler() const
 	{
-		for (int i = 0; i < 64; ++i) {
+		const static int signals[] = {
+			SIGALRM, SIGHUP, SIGINT, SIGKILL, SIGPIPE, SIGTERM, SIGUSR1, SIGUSR2, SIGPOLL, SIGPROF, SIGVTALRM, //< Termination signals.
+			SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGQUIT, SIGSEGV, SIGSYS, SIGTRAP, SIGXCPU //< Aborting signals.
+		};
+	
+		for (int i = 0; i < sizeof(signals)/sizeof(signals[0]); ++i) {
 			struct sigaction sa;
 			memset(&sa, 0, sizeof(struct sigaction));
 			sa.sa_handler = onSignal;
-			sigaction(i, &sa, nullptr);
+			sigaction(signals[i], &sa, nullptr);
 		}
 	}
 	
