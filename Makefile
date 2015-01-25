@@ -9,7 +9,7 @@ define print
 endef
 
 # Project information.
-SOURCES = main.cpp Gif.cpp GifException.cpp Image.cpp Animation.cpp Color.cpp UnicornHat.cpp
+SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARYOBJECTS = $(filter-out main.o, $(OBJECTS))
 EXECUTABLE = Gif2UnicornHat
@@ -17,7 +17,7 @@ LIBRARY = libGif2UnicornHat.a
 
 # 3rd Party Libraries
 WS2812PATH = ./UnicornHat/python/ws2812/lib/
-LDFLAGS += -lpthread -lgif -L$(WS2812PATH) -lws2812-RPi
+LDFLAGS += -lpthread -lboost_program_options -lgif -L$(WS2812PATH) -lws2812-RPi
 
 # Build Flags
 OPTIMIZATION_LEVEL = -O0 -g -ggdb

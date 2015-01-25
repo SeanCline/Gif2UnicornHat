@@ -1,6 +1,7 @@
 #include "Gif.h"
 #include "UnicornHat.h"
 #include "Animation.h"
+#include "ProgramOptions.h"
 
 #include <cstdlib>
 #include <string>
@@ -16,13 +17,12 @@ using namespace Gif2UnicornHat;
 int main(int argc, char *argv[])
 {	
 	try {
-		if (argc < 2) {
-			cerr << "Missing gif file argument." << endl;
-		}
-
 		UnicornHat& hat = UnicornHat::instance();
 		
-		Gif gif = Gif::fromFile(argv[1]);
+		ProgramOptions opts(argc, argv);
+		
+		Gif gif = Gif::fromFile(opts.getGifFilename());
+		hat.setBrightness(opts.getBrightness());
 		hat.playAnimation(gif.getAnimation());
 		
 	} catch (exception& ex) {

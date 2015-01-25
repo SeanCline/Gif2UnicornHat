@@ -6,7 +6,8 @@ Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/un
 #Installation#
 
 ##Install dependencies##
-	sudo apt-get install build-essential git libgif-dev
+
+	sudo apt-get install build-essential git libgif-dev libboost-program-options-dev
 
 ##Clone and build Gif2UnicornHat##
 
