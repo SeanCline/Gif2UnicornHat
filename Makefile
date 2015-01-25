@@ -11,7 +11,7 @@ endef
 # Project information.
 SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARYOBJECTS = $(filter-out main.o, $(OBJECTS))
+LIBRARYOBJECTS = $(filter-out ProgramOptions.o, $(filter-out main.o, $(OBJECTS)))
 EXECUTABLE = Gif2UnicornHat
 LIBRARY = libGif2UnicornHat.a
 
