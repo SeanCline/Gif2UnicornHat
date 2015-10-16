@@ -1,9 +1,10 @@
 #include "UnicornHat.h"
 #include "Image.h"
 #include "Animation.h"
+#include <cstring>
 
 extern "C" {
-#include <ws2812-RPi.h>
+#include <ws2811.h>
 }
 
 #include <unistd.h>
@@ -19,20 +20,26 @@ namespace Gif2UnicornHat {
 
 	bool UnicornHat::alreadyShutdown = false;
 
+    ws2811_t ledstring;
+
 	UnicornHat& UnicornHat::instance()
 	{
-		static UnicornHat hat;
+		static UnicornHat hat; 
 		return hat;
 	}
 
 
 	UnicornHat::UnicornHat()
 	{
-		// Initialize ws2812-RPi.
-		::numLEDs = 64;
-		::initHardware();
-		::clearLEDBuffer();
-		::setBrightness(DEFAULT_BRIGHTNESS);
+        ledstring.freq = WS2811_TARGET_FREQ;
+        ledstring.dmanum = 5;
+        ledstring.channel[0].gpionum = 18;
+        ledstring.channel[0].count = 64;
+        ledstring.channel[0].invert = 0;
+        ledstring.channel[0].brightness = 55;
+        
+        ::ws2811_init(&ledstring);
+        
 		registerExitHandler();
 	}
 
@@ -47,8 +54,8 @@ namespace Gif2UnicornHat {
 		if (brightness < 0 || brightness > 1) {
 			throw invalid_argument("Brightness must be between 0.0 and 1.0");
 		}
-		
-		::setBrightness(brightness);
+	
+        ledstring.channel[0].brightness = (int8_t)(brightness*255);
 	}
 	
 
@@ -60,10 +67,10 @@ namespace Gif2UnicornHat {
 		
 		for (Image::Dimension x = 0; x < image.width(); ++x) {
 			for (Image::Dimension y = 0; y < image.height(); ++y) {
-				::setPixelColor(getPixelIndex(x, y), image[x][y].r, image[x][y].g, image[x][y].b);
+                ledstring.channel[0].leds[getPixelIndex(x, y)] = (image[x][y].r << 16) | (image[x][y].g << 8) | image[x][y].b;
 			}
 		}
-		::show();
+        ::ws2811_render(&ledstring);
 	}
 
 	
@@ -98,6 +105,7 @@ namespace Gif2UnicornHat {
 	void UnicornHat::onSignal(int)
 	{
 		shutdown();
+        exit(0);
 	}
 	
 	
@@ -126,10 +134,10 @@ namespace Gif2UnicornHat {
 		alreadyShutdown = true;
 		
 		for (int i = 0; i < 64; ++i) {
-			::setPixelColor(i, 0, 0, 0);
+            ledstring.channel[0].leds[i] = 0;
 		}
-		::show();
-		::terminate(0);
+        ::ws2811_render(&ledstring);
+        ::ws2811_fini(&ledstring);
 	}
 	
 }
