@@ -16,8 +16,8 @@ EXECUTABLE = Gif2UnicornHat
 LIBRARY = libGif2UnicornHat.a
 
 # 3rd Party Libraries
-WS2812PATH = ./UnicornHat/python/ws2812/lib/
-LDFLAGS += -lpthread -lgif -L$(WS2812PATH) -lws2812-RPi
+WS2812PATH = ./UnicornHat/python/rpi-ws281x/lib/
+LDFLAGS += -lpthread -lgif -L$(WS2812PATH) -lws2811
 
 # Build Flags
 OPTIMIZATION_LEVEL = -O0 -g -ggdb
