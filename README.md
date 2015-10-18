@@ -20,4 +20,4 @@ Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/un
 	
 Gif2UnicornHat takes a single argument -- an 8x8 gif to play on the UnicornHat:
 
-	sudo ./Gif2UnicornHat examples/loading.gif
+	sudo ./Gif2UnicornHat examples/star.gif
