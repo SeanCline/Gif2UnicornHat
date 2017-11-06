@@ -3,12 +3,12 @@ Gif2UnicornHat
 
 Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/unicorn-hat).
 
-#Installation#
+# Installation #
 
-##Install dependencies##
+## Install dependencies ##
 	sudo apt-get install build-essential git libgif-dev
 
-##Clone and build Gif2UnicornHat##
+## Clone and build Gif2UnicornHat ##
 
 	cd ~
 	git clone --recursive https://github.com/SeanCline/Gif2UnicornHat.git
@@ -16,7 +16,7 @@ Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/un
 	make dependencies && make
 
 
-#Usage#
+# Usage #
 	
 Gif2UnicornHat takes a single argument -- an 8x8 gif to play on the UnicornHat:
 
