@@ -37,6 +37,7 @@ namespace Gif2UnicornHat {
 		ledstring.channel[0].count = 64;
 		ledstring.channel[0].invert = 0;
 		ledstring.channel[0].brightness = 55;
+		ledstring.channel[0].strip_type = WS2811_STRIP_GRB;
 		
 		::ws2811_init(&ledstring);
 		
