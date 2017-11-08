@@ -35,7 +35,7 @@ namespace {
 	void drawImageRecordToCanvas(GifFileType& file, Image& canvas, int transparentIndex = -1)
 	{
 		if (DGifGetImageDesc(&file) == GIF_ERROR) {
-			throw GifException();
+			throw GifException(file.Error);
 		}
 
 		auto& img = file.Image;
@@ -55,7 +55,7 @@ namespace {
 		vector<GifPixelType> imgLine(img.Width);
 		auto copyLineToCanvas = [&] (int targetLine) {
 			if (DGifGetLine(&file, imgLine.data(), img.Width) == GIF_ERROR) {
-				throw GifException();
+				throw GifException(file.Error);
 			}
 			
 			// Copy the line into the canvas.
@@ -86,7 +86,10 @@ namespace {
 		}
 	}
 	
+}
 
+namespace Gif2UnicornHat {
+	
 	struct GraphicsControlBlock {
 		enum DisposalMethod {
 			NotSpecified = 0, DoNotDispose, RestoreToBackground, RestoreToPrevious
@@ -118,20 +121,29 @@ namespace {
 		
 		return gcb;
 	}
-}
+	
+	void closeGifFile(GifFileType* f)
+	{
+		int err = 0;
+		if (f) DGifCloseFile(f, &err);
+	}
 
-namespace Gif2UnicornHat {
-
+	unique_ptr<GifFileType, void(*)(GifFileType*)> openGifFile(const string& path)
+	{
+		int err = 0;
+		auto rawGifFile = DGifOpenFileName(path.c_str(), &err);
+		
+		if (err)
+			throw GifException(err);
+		
+		return {rawGifFile, closeGifFile};
+	}
+	
 	Gif Gif::fromFile(const std::string& path, Color defaultBackground /*= Color()*/)
 	{
 		// Open the file.
-		auto deletor = [] (GifFileType* f) { if (f) DGifCloseFile(f); };
-		auto file = unique_ptr<GifFileType, decltype(deletor)>(DGifOpenFileName(path.c_str()), deletor);
-		
-		if (file == nullptr) {
-			throw runtime_error("Failed to open gif file: " + path);
-		}
-		
+		auto file = openGifFile(path);
+
 		// Figure out what background colour to use.
 		Color backgroundColor = defaultBackground;
 		if (file->SColorMap != nullptr && file->SBackGroundColor > 0) {
@@ -146,7 +158,7 @@ namespace Gif2UnicornHat {
 		while (true) {
 			GifRecordType recordType;
 			if (DGifGetRecordType(file.get(), &recordType) == GIF_ERROR) {
-				throw GifException();
+				throw GifException(file->Error);
 			}
 			
 			if (recordType == IMAGE_DESC_RECORD_TYPE) {
@@ -178,7 +190,7 @@ namespace Gif2UnicornHat {
 				int extCode;
 				GifByteType* extData;
 				if (DGifGetExtension(file.get(), &extCode, &extData) == GIF_ERROR) {
-					throw GifException();
+					throw GifException(file->Error);
 				}
 				
 				if (extCode == APPLICATION_EXT_FUNC_CODE) //< Stores loop count animated images.
@@ -199,7 +211,7 @@ namespace Gif2UnicornHat {
 				// Skip any other extension blocks.
 				while (extData != nullptr) {
 					if (DGifGetExtensionNext(file.get(), &extData) == GIF_ERROR) {
-						throw GifException();
+						throw GifException(file->Error);
 					}
 				}
 			} else if (recordType == TERMINATE_RECORD_TYPE) {

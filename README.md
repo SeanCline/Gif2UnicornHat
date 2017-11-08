@@ -4,9 +4,10 @@ Gif2UnicornHat
 Plays 8x8 gifs on the [Pimoroni UnicornHat](http://shop.pimoroni.com/products/unicorn-hat).
 
 # Installation #
+These instructions assume a fresh installation of [Raspbian Stretch](https://www.raspberrypi.org/downloads/raspbian/).
 
 ## Install dependencies ##
-	sudo apt-get install build-essential git libgif-dev
+	sudo apt-get install build-essential git libgif-dev scons
 
 ## Clone and build Gif2UnicornHat ##
 

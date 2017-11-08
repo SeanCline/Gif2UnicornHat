@@ -5,7 +5,7 @@ namespace Gif2UnicornHat {
 
 	class GifException : public std::runtime_error {
 	public:
-		GifException();
+		GifException(int gifErrorCode);
 		int code() const;
 		
 	private:

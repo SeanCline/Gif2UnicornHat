@@ -6,11 +6,12 @@ using namespace std;
 
 namespace Gif2UnicornHat {
 
-	GifException::GifException()
-		: runtime_error("Gif Error: " + GifLastError()),
-		  code_(GifLastError())
+	GifException::GifException(int gifErrorCode)
+		: runtime_error("Gif Error: " + string(GifErrorString(gifErrorCode))),
+		  code_(gifErrorCode)
 	{
 	}
+
 
 	int GifException::code() const
 	{
