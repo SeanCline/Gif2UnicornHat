@@ -16,12 +16,12 @@ EXECUTABLE = Gif2UnicornHat
 LIBRARY = libGif2UnicornHat.a
 
 # 3rd Party Libraries
-WS2812PATH = ./UnicornHat/library/legacy/rpi-ws281x/lib/
+WS2812PATH = ./rpi_ws281x/
 LDFLAGS += -lpthread -lgif -L$(WS2812PATH) -lws2811
 
 # Build Flags
 OPTIMIZATION_LEVEL = -O0 -g -ggdb
-WARNINGS = -Wall -Wextra -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wunreachable-code
+WARNINGS = -Wall -Wextra -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wunreachable-code -Wno-psabi
 STRICTNESS = -pedantic
 INCLUDES += -isystem $(WS2812PATH)
 CXXFLAGS = -std=c++0x -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
@@ -30,7 +30,7 @@ CXXFLAGS = -std=c++0x -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(
 all: $(SOURCES) $(EXECUTABLE) $(LIBRARY)
 
 dependencies:
-	make -C $(WS2812PATH)
+	cd $(WS2812PATH); scons
 
 .cpp.o:
 	$(call print, "Compiling $< into $@")
