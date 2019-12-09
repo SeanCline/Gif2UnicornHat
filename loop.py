@@ -37,6 +37,6 @@ while True:
         
         playtime = 120 if gif.endswith('_anim') else 15
         
-        proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.04', '2'])
+        proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.04'])
         time.sleep(playtime)
         proc.terminate()
