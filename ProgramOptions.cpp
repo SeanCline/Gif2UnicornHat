@@ -9,7 +9,8 @@ using namespace std;
 
 ProgramOptions::ProgramOptions(int argc, char* argv[])
 	 : args_(argv, argv+argc),
-	   brightness_(.2)
+	   brightness_(.2),
+	   orientation_(0)
 {
 	// Process the help option.
 	if (isHelpRequested()) {
@@ -32,6 +33,16 @@ ProgramOptions::ProgramOptions(int argc, char* argv[])
 			brightness_ = stod(args_[2]);
 		} catch (exception&) {
 			cerr << "Invalid brightness." << endl;
+			exit(0);
+		}
+	}
+	
+	// Process the orientation.
+	if (args_.size() > 3) {
+		try {
+			orientation_ = stoi(args_[3]) % 4;
+		} catch (exception&) {
+			cerr << "Invalid orientation." << endl;
 			exit(0);
 		}
 	}
@@ -64,6 +75,12 @@ auto ProgramOptions::getGifFilename() const -> string
 auto ProgramOptions::getBrightness() const -> double
 {
 	return brightness_;
+}
+
+
+auto ProgramOptions::getOrientation() const -> int
+{
+	return orientation_;
 }
 
 

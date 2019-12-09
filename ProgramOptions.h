@@ -17,6 +17,7 @@ public: // Methods.
 	auto getHelpString() const ->std::string;
 	auto getGifFilename() const -> std::string;
 	auto getBrightness() const -> double;
+	auto getOrientation() const -> int;
 
 private: // Helpers.
 	auto isHelpRequested() const -> bool;
@@ -25,4 +26,5 @@ private: // Data.
 	std::vector<std::string> args_;
 	std::string gifFilename_;
 	double brightness_;
+	int orientation_;
 };

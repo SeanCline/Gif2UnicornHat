@@ -21,6 +21,7 @@ namespace Gif2UnicornHat {
 		
 		public: // Methods.
 			void setBrightness(double);
+			void setOrientation(int);
 			void showImage(const Image&);
 			void playAnimation(const Animation&);
 			
@@ -32,6 +33,9 @@ namespace Gif2UnicornHat {
 			static void onSignal(int);
 			static bool alreadyShutdown;
 			static void shutdown();
+			
+		private: // Data.
+			int orientation_;
 	};
 
 }

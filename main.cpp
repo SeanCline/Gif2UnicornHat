@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 		
 		UnicornHat& hat = UnicornHat::instance();
 		hat.setBrightness(opts.getBrightness());
+		hat.setOrientation(opts.getOrientation());
 		hat.playAnimation(gif.getAnimation());
 		
 	} catch (exception& ex) {
