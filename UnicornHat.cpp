@@ -88,10 +88,21 @@ namespace Gif2UnicornHat {
 	
 	void UnicornHat::playAnimation(const Animation& animation)
 	{
-		for (int loopNum = 0; loopNum < animation.numLoops() || animation.numLoops() == 0; ++loopNum) {
-			for (auto&& frame : animation.frames()) {
+		// If this is a static image, conserve CPU by only updating the UnicornHat occasionally.
+		if (animation.numLoops() == 0 && animation.numFrames() == 1) {
+			// Static image.
+			auto& frame = animation.frames()[0];
+			while (true) {
 				showImage(frame.image);
-				this_thread::sleep_for(frame.duration);
+				this_thread::sleep_for(std::chrono::seconds(5));
+			}
+		} else {
+			// Animation.
+			for (int loopNum = 0; loopNum < animation.numLoops() || animation.numLoops() == 0; ++loopNum) {
+				for (auto&& frame : animation.frames()) {
+					showImage(frame.image);
+					this_thread::sleep_for(frame.duration);
+				}
 			}
 		}
 	}
