@@ -15,6 +15,9 @@ def get_files_with_extension_recursive(extension, dir = '.'):
 def get_gifs():
     return get_files_with_extension_recursive('.gif')
 
+def base_filename(path):
+    return os.path.splitext(os.path.basename(path))[0]
+
 # Keep track of the currently open process so we can exit gracefully.
 proc = None
 def cleanup():
@@ -31,12 +34,15 @@ while True:
     #print("Found gifs:", gifs)
     
     for gif in gifs:
-        print('Displaying:', gif)
-        if gif.endswith('_skip'):
+        
+        basename = base_filename(gif) # Name without file extension.
+        if basename.endswith('_skip'):
+            print('Skipping:', gif)
             continue
+
+        playtime = 120 if basename.endswith('_anim') else 15
         
-        playtime = 120 if gif.endswith('_anim') else 15
-        
-        proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.04'])
+        print('Displaying:', gif, 'Time:', playtime)
+        proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.02'])
         time.sleep(playtime)
         proc.terminate()
