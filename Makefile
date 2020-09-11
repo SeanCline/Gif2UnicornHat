@@ -20,11 +20,11 @@ WS2812PATH = ./rpi_ws281x/
 LDFLAGS += -lpthread -lgif -L$(WS2812PATH) -lws2811
 
 # Build Flags
-OPTIMIZATION_LEVEL = -O0 -g -ggdb
+OPTIMIZATION_LEVEL = -O3
 WARNINGS = -Wall -Wextra -Wcast-align -Wcast-qual -Wconversion -Wformat=2 -Winit-self -Winvalid-pch -Wmissing-format-attribute -Wmissing-include-dirs -Wredundant-decls -Wunreachable-code -Wno-psabi
 STRICTNESS = -pedantic
 INCLUDES += -isystem $(WS2812PATH)
-CXXFLAGS = -std=c++0x -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
+CXXFLAGS = -std=c++17 -D_POSIX_SOURCE -fPIC $(OPTIMIZATION_LEVEL) $(WARNINGS) $(STRICTNESS)
 
 # Targets
 all: $(SOURCES) $(EXECUTABLE) $(LIBRARY)
