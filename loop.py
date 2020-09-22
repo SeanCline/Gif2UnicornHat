@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-
-import os
-import time
-import subprocess
-import atexit
-import random
+import os, time, subprocess, atexit, random
 
 def get_files_with_extension_recursive(extension, dir = '.'):
     for root, dirs, files in os.walk(dir):
@@ -23,6 +18,7 @@ proc = None
 def cleanup():
     if proc != None:
         proc.terminate()
+        proc = None
 
 atexit.register(cleanup)
 
@@ -43,6 +39,7 @@ while True:
         playtime = 120 if basename.endswith('_anim') else 15
         
         print('Displaying:', gif, 'Time:', playtime)
+        if proc is not None:
+            proc.terminate()
         proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.02'])
         time.sleep(playtime)
-        proc.terminate()

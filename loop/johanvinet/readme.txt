@@ -1,4 +1,4 @@
-May of these gifs come from:
+Many of these gifs come from:
 https://johanvinet.tumblr.com/post/127476776680/here-are-100-characters-8x8-pixels-using-the
 
 His tumbler has the license terms:
