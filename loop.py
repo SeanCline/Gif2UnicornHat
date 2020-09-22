@@ -16,30 +16,37 @@ def base_filename(path):
 # Keep track of the currently open process so we can exit gracefully.
 proc = None
 def cleanup():
-    if proc != None:
+    global proc
+    if proc is not None:
         proc.terminate()
         proc = None
 
 atexit.register(cleanup)
 
-# Loop over and display the gifs.
-while True:
-    # On each cycle, look for new gifs and shuffle them.
-    gifs = list(get_gifs())
-    random.shuffle(gifs)
-    #print("Found gifs:", gifs)
+def main():
+    global proc
     
-    for gif in gifs:
+    # Loop over and display the gifs.
+    while True:
+        # On each cycle, look for new gifs and shuffle them.
+        gifs = list(get_gifs())
+        random.shuffle(gifs)
+        #print("Found gifs:", gifs)
         
-        basename = base_filename(gif) # Name without file extension.
-        if basename.endswith('_skip'):
-            print('Skipping:', gif)
-            continue
+        for gif in gifs:
+            
+            basename = base_filename(gif) # Name without file extension.
+            if basename.endswith('_skip'):
+                print('Skipping:', gif)
+                continue
 
-        playtime = 120 if basename.endswith('_anim') else 15
-        
-        print('Displaying:', gif, 'Time:', playtime)
-        if proc is not None:
-            proc.terminate()
-        proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.02'])
-        time.sleep(playtime)
+            playtime = 120 if basename.endswith('_anim') else 15
+            
+            print('Displaying:', gif, 'Time:', playtime)
+            if proc is not None:
+                proc.terminate()
+            proc = subprocess.Popen(['./Gif2UnicornHat', gif, '.02'])
+            time.sleep(playtime)
+
+if __name__ == "__main__":
+    main()
