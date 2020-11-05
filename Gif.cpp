@@ -60,12 +60,10 @@ namespace {
 			
 			// Copy the line into the canvas.
 			for (int j = 0; j < img.Width; ++j) {
-				if (imgLine[j] != transparentIndex) {
-					canvas[img.Left+j][img.Top+targetLine] = lookupColor(colorMap, imgLine[j]);
-				} else {
-					// Use the a fully transparent colour instead.
-					canvas[img.Left+j][img.Top+targetLine] = Color::Transparent;
-				}
+				if (imgLine[j] == transparentIndex)
+					continue; //< Don't overwrite what's currently in the canvas when transparent.
+					
+				canvas[img.Left+j][img.Top+targetLine] = lookupColor(colorMap, imgLine[j]);
 			}
 		};
 		
@@ -163,8 +161,8 @@ namespace Gif2UnicornHat {
 			
 			if (recordType == IMAGE_DESC_RECORD_TYPE) {
 				Image canvas(file->SWidth, file->SHeight, backgroundColor);
-				
-				if (gcb.disposalMethod == GraphicsControlBlock::DoNotDispose) {
+				if (gcb.disposalMethod == GraphicsControlBlock::DoNotDispose ||
+					gcb.disposalMethod == GraphicsControlBlock::NotSpecified) { //< Most encoders use NotSpecified to mean DoNotDispose.
 					// Copy in the last canvas and use it as the starting point.
 					canvas = lastCanvas;
 				}
