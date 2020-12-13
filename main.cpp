@@ -1,15 +1,14 @@
 #include "Gif.h"
-#include "UnicornHat.h"
 #include "Animation.h"
 #include "ProgramOptions.h"
+#include "Hat.h"
 
 #include <string>
 #include <iostream>
 #include <exception>
+#include <memory>
 
-using namespace std;
 using namespace Gif2UnicornHat;
-
 
 int main(int argc, char *argv[])
 {
@@ -17,16 +16,17 @@ int main(int argc, char *argv[])
 		ProgramOptions opts(argc, argv);
 		Gif gif = Gif::fromFile(opts.getGifFilename());
 		
-		UnicornHat& hat = UnicornHat::instance();
-		hat.setBrightness(opts.getBrightness());
-		hat.setOrientation(opts.getOrientation());
-		hat.playAnimation(gif.getAnimation());
+		auto hatName = getConnectedHatName();
+		auto hat = createImageDisplay(hatName);
+		hat->setBrightness(opts.getBrightness());
+		hat->setOrientation(opts.getOrientation());
+		hat->playAnimation(gif.getAnimation());
 		
-	} catch (exception& ex) {
-		cerr << "Exception unwound to main. Details: " << ex.what() << endl;
+	} catch (std::exception& ex) {
+		std::cerr << "Exception unwound to main. Details: " << ex.what() << std::endl;
 		throw;
 	} catch(...) {
-		cerr << "Unknown exception unwound to main." << endl;
+		std::cerr << "Unknown exception unwound to main." << std::endl;
 		throw;
 	}
 }

@@ -22,13 +22,6 @@ namespace Gif2UnicornHat {
 
 	ws2811_t ledstring;
 
-	UnicornHat& UnicornHat::instance()
-	{
-		static UnicornHat hat; 
-		return hat;
-	}
-
-
 	UnicornHat::UnicornHat()
 		: orientation_(0)
 	{

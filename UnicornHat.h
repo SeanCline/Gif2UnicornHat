@@ -1,15 +1,15 @@
 #pragma once
 
+#include "ImageDisplay.h"
+
 namespace Gif2UnicornHat {
 
 	class Image;
 	class Animation;
 	
-	class UnicornHat {
-		public: // Singleton.
-			static UnicornHat& instance();
-		
-		private: // Construction.
+	/* Use the rpi_ws2811 library to send images to the UnicornHat. */
+	class UnicornHat : public ImageDisplay {
+		public: // Construction.
 			UnicornHat();
 			~UnicornHat();
 		
@@ -20,10 +20,10 @@ namespace Gif2UnicornHat {
 			UnicornHat& operator=(UnicornHat&&) = delete;
 		
 		public: // Methods.
-			void setBrightness(double);
-			void setOrientation(int);
-			void showImage(const Image&);
-			void playAnimation(const Animation&);
+			void setBrightness(double) override;
+			void setOrientation(int) override;
+			void showImage(const Image&) override;
+			void playAnimation(const Animation&) override;
 			
 		private: // Helpers.
 			int getPixelIndex(int x, int y) const;
