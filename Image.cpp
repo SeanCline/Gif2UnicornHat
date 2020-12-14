@@ -25,6 +25,22 @@ namespace Gif2UnicornHat {
 	}
 
 
+	Image scale2x() const
+	{
+		Image img(width_*2, height_*2);
+		for (Dimension x = 0; x < width_; ++x) {
+			for (Dimension y = 0; y < height_; ++y) {
+				// Each pixel in the source turns into 4 in the target.
+				const Color px = (*this)[x][y];
+				img[2*x][2*y] = px;
+				img[2*x][2*y+1] = px;
+				img[2*x+1][2*y] = px;
+				img[2*x+1][2*y+1] = px;
+			}
+		}
+	}
+	
+
 	void Image::fill(const Color& c)
 	{
 		std::fill(begin(canvas_), end(canvas_), c);

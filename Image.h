@@ -13,6 +13,7 @@ namespace Gif2UnicornHat {
 	public: // Dimensions.
 		Dimension width() const;
 		Dimension height() const;
+		Image scale2x() const;
 		
 	public: // Drawing.
 		void fill(const Color&);

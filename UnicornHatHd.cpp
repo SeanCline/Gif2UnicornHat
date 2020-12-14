@@ -95,7 +95,10 @@ namespace Gif2UnicornHat {
 		if (fd_ < 0)
 			throw std::runtime_error("Cannot write image data. SPI device is not open.");
 		
-		// TODO: If image is 8x8, then do pixel doubling up to 16x16.
+		// If image is 8x8, then do pixel doubling up to 16x16.
+		if (image.width() == 8 && image.height() == 8)
+			image = image.scale2x();
+		
 		// TODO: If orientation_ is non-zero, transform the image.
 		
 		std::vector<uint8_t> buffer;
