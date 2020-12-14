@@ -1,6 +1,6 @@
 #include "Hat.h"
 #include "UnicornHat.h"
-//#include "UnicornHatHd.h"
+#include "UnicornHatHd.h"
 
 #include <string>
 #include <iterator>
@@ -31,8 +31,8 @@ namespace Gif2UnicornHat {
 	{
 		if (hatName == "Unicorn HAT") {
 			return std::unique_ptr<UnicornHat>(new UnicornHat);
-		//} else if (hatName == "Unicorn HAT HD") {
-		//	return std::unique_ptr<UnicornHatHd>(new UnicornHatHd);
+		} else if (hatName == "Unicorn HAT HD") {
+			return std::unique_ptr<UnicornHatHd>(new UnicornHatHd);
 		} else if (hatName.empty()) {
 			throw std::runtime_error("No hat connected.");
 		} else {
