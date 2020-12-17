@@ -9,6 +9,8 @@ namespace Gif2UnicornHat {
 	
 	/* Use /dev/spidev*to send images to the Unicorn HAT HD. */
 	class UnicornHatHd : public ImageDisplay {
+		typedef unsigned int Dimension;
+		
 		public: // Construction.
 			UnicornHatHd();
 			~UnicornHatHd();
@@ -19,6 +21,10 @@ namespace Gif2UnicornHat {
 			UnicornHatHd(UnicornHatHd&&) = delete;
 			UnicornHatHd& operator=(UnicornHatHd&&) = delete;
 		
+		public: // Dimensions.
+			static constexpr Dimension width()  { return 16; };
+			static constexpr Dimension height() { return 16; };
+		
 		public: // Methods.
 			void setBrightness(double) override;
 			void setOrientation(int) override;
@@ -26,15 +32,7 @@ namespace Gif2UnicornHat {
 			void playAnimation(const Animation&) override;
 		
 		private: // Helpers.
-			int getPixelIndex(int x, int y) const;
-		
-		/*
-		private: // Signal handling to make sure we safely shutdown.
-			void registerExitHandler() const;
-			static void onSignal(int);
-			static bool alreadyShutdown;
-			static void shutdown();
-		*/
+			Dimension getPixelIndex(Dimension x, Dimension y) const;
 		
 		private: // Data.
 			int orientation_;

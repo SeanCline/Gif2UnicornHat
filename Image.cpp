@@ -25,7 +25,7 @@ namespace Gif2UnicornHat {
 	}
 
 
-	Image scale2x() const
+	Image Image::scale2x() const
 	{
 		Image img(width_*2, height_*2);
 		for (Dimension x = 0; x < width_; ++x) {
@@ -38,6 +38,7 @@ namespace Gif2UnicornHat {
 				img[2*x+1][2*y+1] = px;
 			}
 		}
+		return img;
 	}
 	
 

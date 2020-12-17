@@ -9,6 +9,8 @@ namespace Gif2UnicornHat {
 	
 	/* Use the rpi_ws2811 library to send images to the UnicornHat. */
 	class UnicornHat : public ImageDisplay {
+		typedef unsigned int Dimension;
+		
 		public: // Construction.
 			UnicornHat();
 			~UnicornHat();
@@ -19,6 +21,10 @@ namespace Gif2UnicornHat {
 			UnicornHat(UnicornHat&&) = delete;
 			UnicornHat& operator=(UnicornHat&&) = delete;
 		
+		public: // Dimensions.
+			static constexpr Dimension width()  { return 8; };
+			static constexpr Dimension height() { return 8; };
+		
 		public: // Methods.
 			void setBrightness(double) override;
 			void setOrientation(int) override;
@@ -26,7 +32,7 @@ namespace Gif2UnicornHat {
 			void playAnimation(const Animation&) override;
 			
 		private: // Helpers.
-			int getPixelIndex(int x, int y) const;
+			Dimension getPixelIndex(Dimension x, Dimension y) const;
 			
 		private: // Signal handling to make sure we safely shutdown.
 			void registerExitHandler() const;

@@ -14,8 +14,6 @@ extern "C" {
 #include <thread>
 #include <chrono>
 
-using namespace std;
-
 namespace Gif2UnicornHat {
 
 	bool UnicornHat::alreadyShutdown = false;
@@ -47,7 +45,7 @@ namespace Gif2UnicornHat {
 	void UnicornHat::setBrightness(double brightness)
 	{
 		if (brightness < 0 || brightness > 1) {
-			throw invalid_argument("Brightness must be between 0.0 and 1.0");
+			throw std::invalid_argument("Brightness must be between 0.0 and 1.0");
 		}
 	
 		ledstring.channel[0].brightness = (int8_t)(brightness*255);
@@ -57,7 +55,7 @@ namespace Gif2UnicornHat {
 	void UnicornHat::setOrientation(int orientation)
 	{
 		if (orientation < 0 || orientation > 3) {
-			throw invalid_argument("Orientation must be between 0 and 3");
+			throw std::invalid_argument("Orientation must be between 0 and 3");
 		}
 	
 		orientation_ = orientation;
@@ -66,12 +64,11 @@ namespace Gif2UnicornHat {
 	
 	void UnicornHat::showImage(const Image& image)
 	{
-		if (image.width() > 8 || image.height() > 8) {
-			throw invalid_argument("Image is too big for the UnicornHat. An image must be 8x8 pixels to be sent to the hat.");
-		}
+		if (image.width() > width() || image.height() > height())
+			throw std::invalid_argument("Image is too big for the UnicornHat. Must be 8x8 pixels.");
 		
-		for (Image::Dimension x = 0; x < image.width(); ++x) {
-			for (Image::Dimension y = 0; y < image.height(); ++y) {
+		for (Dimension x = 0; x < image.width(); ++x) {
+			for (Dimension y = 0; y < image.height(); ++y) {
 				ledstring.channel[0].leds[getPixelIndex(x, y)] = (image[x][y].r << 16) | (image[x][y].g << 8) | image[x][y].b;
 			}
 		}
@@ -87,23 +84,27 @@ namespace Gif2UnicornHat {
 			auto& frame = animation.frames()[0];
 			while (true) {
 				showImage(frame.image);
-				this_thread::sleep_for(std::chrono::seconds(5));
+				std::this_thread::sleep_for(std::chrono::seconds(5));
 			}
 		} else {
 			// Animation.
 			for (int loopNum = 0; loopNum < animation.numLoops() || animation.numLoops() == 0; ++loopNum) {
 				for (auto&& frame : animation.frames()) {
 					showImage(frame.image);
-					this_thread::sleep_for(frame.duration);
+					std::this_thread::sleep_for(frame.duration);
 				}
 			}
 		}
 	}
 	
 	
-	int UnicornHat::getPixelIndex(int x, int y) const
+	UnicornHat::Dimension UnicornHat::getPixelIndex(Dimension x, Dimension y) const
 	{
-		const static int indicies_0[8][8] = {
+		if (x >= width() || y >= height())
+			throw std::out_of_range("getPixelIndex - Pixel coordinates out of range.");
+			
+		// The Unicorn HAT simplifies its PCB design by zig-zagging each row.
+		const static Dimension indicies[width()][height()] = {
 			{0,  1,  2,  3,  4,   5,  6,  7},
 			{15, 14, 13, 12, 11, 10,  9,  8},
 			{16, 17, 18, 19, 20, 21, 22, 23},
@@ -113,48 +114,15 @@ namespace Gif2UnicornHat {
 			{48, 49, 50, 51, 52, 53, 54, 55},
 			{63, 62, 61, 60, 59, 58, 57, 56}
 		};
-		
-		const static int indicies_90[8][8] = {
-			{63, 48, 47, 32, 31, 16, 15, 0, },
-			{62, 49, 46, 33, 30, 17, 14, 1, },
-			{61, 50, 45, 34, 29, 18, 13, 2, },
-			{60, 51, 44, 35, 28, 19, 12, 3, },
-			{59, 52, 43, 36, 27, 20, 11, 4, },
-			{58, 53, 42, 37, 26, 21, 10, 5, },
-			{57, 54, 41, 38, 25, 22, 9,  6, },
-			{56, 55, 40, 39, 24, 23, 8,  7, },
-		};
-		
-		const static int indicies_180[8][8] = {
-			{56, 57, 58, 59, 60, 61, 62, 63, },
-			{55, 54, 53, 52, 51, 50, 49, 48, },
-			{40, 41, 42, 43, 44, 45, 46, 47, },
-			{39, 38, 37, 36, 35, 34, 33, 32, },
-			{24, 25, 26, 27, 28, 29, 30, 31, },
-			{23, 22, 21, 20, 19, 18, 17, 16, },
-			{8,  9,  10, 11, 12, 13, 14, 15, },
-			{7,  6,  5,  4,  3,  2,  1,  0,  }
-		};
-
-		const static int indicies_270[8][8] = {
-			{7, 8, 23, 24, 39, 40, 55, 56, },
-			{6, 9, 22, 25, 38, 41, 54, 57, },
-			{5, 10, 21, 26, 37, 42, 53, 58, },
-			{4, 11, 20, 27, 36, 43, 52, 59, },
-			{3, 12, 19, 28, 35, 44, 51, 60, },
-			{2, 13, 18, 29, 34, 45, 50, 61, },
-			{1, 14, 17, 30, 33, 46, 49, 62, },
-			{0, 15, 16, 31, 32, 47, 48, 63, },
-		};
 
 		switch (orientation_) {
-			case 0: return indicies_0[x][y];   break;
-			case 1: return indicies_90[x][y];  break;
-			case 2: return indicies_180[x][y]; break;
-			case 3: return indicies_270[x][y]; break;
+			case 0: return indicies[x][y];                      //< 0 degrees. (No rotation.)
+			case 1: return indicies[y][height()-1-x];           //< +90 degrees.
+			case 2: return indicies[width()-1-x][height()-1-y]; //< +180 degrees.
+			case 3: return indicies[width()-1-y][x];            //< +270 degrees.
 		}
 		
-		throw runtime_error("getPixelIndex - Invalid Orientation");
+		throw std::runtime_error("getPixelIndex - Invalid Orientation");
 	}
 	
 	
