@@ -2,6 +2,7 @@
 #include "Animation.h"
 #include "ProgramOptions.h"
 #include "Hat.h"
+#include "AbortHandler.h"
 
 #include <string>
 #include <iostream>
@@ -16,12 +17,10 @@ int main(int argc, char *argv[])
 		ProgramOptions opts(argc, argv);
 		Gif gif = Gif::fromFile(opts.getGifFilename());
 		
-		auto hatName = getConnectedHatName();
-		auto hat = createImageDisplay(hatName);
+		auto hat = createImageDisplay(opts.getDevice());
 		hat->setBrightness(opts.getBrightness());
 		hat->setOrientation(opts.getOrientation());
-		hat->playAnimation(gif.getAnimation());
-		
+		hat->playAnimation(gif.getAnimation(), getAbortFlag());
 	} catch (std::exception& ex) {
 		std::cerr << "Exception unwound to main. Details: " << ex.what() << std::endl;
 		throw;

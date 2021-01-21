@@ -29,16 +29,10 @@ namespace Gif2UnicornHat {
 			void setBrightness(double) override;
 			void setOrientation(int) override;
 			void showImage(const Image&) override;
-			void playAnimation(const Animation&) override;
+			void playAnimation(const Animation&, const volatile bool* isAbortRequested = nullptr) override;
 			
 		private: // Helpers.
 			Dimension getPixelIndex(Dimension x, Dimension y) const;
-			
-		private: // Signal handling to make sure we safely shutdown.
-			void registerExitHandler() const;
-			static void onSignal(int);
-			static bool alreadyShutdown;
-			static void shutdown();
 			
 		private: // Data.
 			int orientation_;

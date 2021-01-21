@@ -1,22 +1,16 @@
 #include "UnicornHat.h"
 #include "Image.h"
 #include "Animation.h"
-#include <cstring>
 
 extern "C" {
 #include <ws2811.h>
 }
-
-#include <unistd.h>
-#include <signal.h>
 
 #include <stdexcept>
 #include <thread>
 #include <chrono>
 
 namespace Gif2UnicornHat {
-
-	bool UnicornHat::alreadyShutdown = false;
 
 	ws2811_t ledstring;
 
@@ -32,13 +26,15 @@ namespace Gif2UnicornHat {
 		ledstring.channel[0].strip_type = WS2811_STRIP_GRB;
 		
 		::ws2811_init(&ledstring);
-		
-		registerExitHandler();
 	}
 
 	UnicornHat::~UnicornHat()
 	{
-		shutdown();
+		for (int i = 0; i < 64; ++i) {
+			ledstring.channel[0].leds[i] = 0;
+		}
+		::ws2811_render(&ledstring);
+		::ws2811_fini(&ledstring);
 	}
 	
 	
@@ -76,7 +72,7 @@ namespace Gif2UnicornHat {
 	}
 
 	
-	void UnicornHat::playAnimation(const Animation& animation)
+	void UnicornHat::playAnimation(const Animation& animation, const volatile bool* isAbortRequested)
 	{
 		// If this is a static image, conserve CPU by only updating the UnicornHat occasionally.
 		if (animation.numLoops() == 0 && animation.numFrames() == 1) {
@@ -85,6 +81,8 @@ namespace Gif2UnicornHat {
 			while (true) {
 				showImage(frame.image);
 				std::this_thread::sleep_for(std::chrono::seconds(5));
+				if (isAbortRequested && *isAbortRequested)
+					return;
 			}
 		} else {
 			// Animation.
@@ -92,6 +90,8 @@ namespace Gif2UnicornHat {
 				for (auto&& frame : animation.frames()) {
 					showImage(frame.image);
 					std::this_thread::sleep_for(frame.duration);
+					if (isAbortRequested && *isAbortRequested)
+						return;
 				}
 			}
 		}
@@ -124,44 +124,5 @@ namespace Gif2UnicornHat {
 		
 		throw std::runtime_error("getPixelIndex - Invalid Orientation");
 	}
-	
-	
-	void UnicornHat::onSignal(int)
-	{
-		shutdown();
-		exit(0);
-	}
-	
-	
-	void UnicornHat::registerExitHandler() const
-	{
-		const static int signals[] = {
-			SIGALRM, SIGHUP, SIGINT, SIGKILL, SIGPIPE, SIGTERM, SIGUSR1, SIGUSR2, SIGPOLL, SIGPROF, SIGVTALRM, //< Termination signals.
-			SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGQUIT, SIGSEGV, SIGSYS, SIGTRAP, SIGXCPU //< Aborting signals.
-		};
-	
-		for (auto i = 0u; i < sizeof(signals)/sizeof(signals[0]); ++i) {
-			struct sigaction sa;
-			memset(&sa, 0, sizeof(struct sigaction));
-			sa.sa_handler = onSignal;
-			sigaction(signals[i], &sa, nullptr);
-		}
-	}
-	
-	
-	void UnicornHat::shutdown()
-	{
-		// Don't run termination logic more than once.
-		if (alreadyShutdown) {
-			return;
-		}
-		alreadyShutdown = true;
-		
-		for (int i = 0; i < 64; ++i) {
-			ledstring.channel[0].leds[i] = 0;
-		}
-		::ws2811_render(&ledstring);
-		::ws2811_fini(&ledstring);
-	}
-	
+
 }

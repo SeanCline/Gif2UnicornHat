@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ImageDisplay.h"
 
 #include <string>
@@ -5,10 +7,10 @@
 
 namespace Gif2UnicornHat {
 	
-	// Reads the name of the connected HAT, "Unicorn HAT" for example from /proc
-	std::string getConnectedHatName();
+	// Reads the name of the connected HAT, "Unicorn HAT" for example from /proc.
+	auto getConnectedHatName() -> std::string;
 
 	// Create an instance of ImageDisplay based on what the hat's EEPROM says.
-	std::unique_ptr<ImageDisplay> createImageDisplay(const std::string& hatName);
+	auto createImageDisplay(const std::string& hatName) -> std::unique_ptr<ImageDisplay>;
 
 }

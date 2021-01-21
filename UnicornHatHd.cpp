@@ -52,7 +52,7 @@ namespace Gif2UnicornHat {
 	UnicornHatHd::~UnicornHatHd()
 	{
 		// Show a blank image.
-		showImage(Image(16, 16));
+		showImage(Image(width(), height()));
 		close(fd_);
 	}
 	
@@ -90,7 +90,7 @@ namespace Gif2UnicornHat {
 			throw std::runtime_error("Cannot write image data. SPI device is not open.");
 		
 		std::vector<uint8_t> buffer;
-		buffer.resize(1 + (16*16*3)); //< Start byte + subpixel data.
+		buffer.resize(1 + (width()*height()*3)); //< Start byte + subpixel data.
 		buffer[0] = SpiSettings::start_byte;
 		for (Dimension x = 0; x < image.width(); ++x) {
 			for (Dimension y = 0; y < image.height(); ++y) {
@@ -113,7 +113,7 @@ namespace Gif2UnicornHat {
 	}
 
 	
-	void UnicornHatHd::playAnimation(const Animation& animation)
+	void UnicornHatHd::playAnimation(const Animation& animation, const volatile bool* isAbortRequested)
 	{
 		// If this is a static image, conserve CPU by only updating the UnicornHat occasionally.
 		if (animation.numLoops() == 0 && animation.numFrames() == 1) {
@@ -122,6 +122,8 @@ namespace Gif2UnicornHat {
 			while (true) {
 				showImage(frame.image);
 				std::this_thread::sleep_for(std::chrono::seconds(5));
+				if (isAbortRequested && *isAbortRequested)
+					return;
 			}
 		} else {
 			// Animation.
@@ -129,6 +131,8 @@ namespace Gif2UnicornHat {
 				for (auto&& frame : animation.frames()) {
 					showImage(frame.image);
 					std::this_thread::sleep_for(frame.duration);
+					if (isAbortRequested && *isAbortRequested)
+						return;
 				}
 			}
 		}

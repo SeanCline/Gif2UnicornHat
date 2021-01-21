@@ -21,13 +21,13 @@ namespace {
 namespace Gif2UnicornHat {
 	
 	// Reads the name of the connected HAT, "Unicorn HAT" for example from /proc
-	std::string getConnectedHatName()
+	auto getConnectedHatName() -> std::string
 	{
 		return trim(readFileContents("/proc/device-tree/hat/product"));
 	}
 
 	// Create an instance of ImageDisplay based on what the hat's EEPROM says.
-	std::unique_ptr<ImageDisplay> createImageDisplay(const std::string& hatName)
+	auto createImageDisplay(const std::string& hatName) -> std::unique_ptr<ImageDisplay>
 	{
 		if (hatName == "Unicorn HAT") {
 			return std::unique_ptr<UnicornHat>(new UnicornHat);
