@@ -18,13 +18,11 @@ public: // Methods.
 	auto getGifFilename() const -> std::string;
 	auto getBrightness() const -> double;
 	auto getOrientation() const -> int;
+	auto getDevice() const -> std::string;
 
-private: // Helpers.
-	auto isHelpRequested() const -> bool;
-	
 private: // Data.
-	std::vector<std::string> args_;
 	std::string gifFilename_;
 	double brightness_;
 	int orientation_;
+	std::string deviceName_;
 };
