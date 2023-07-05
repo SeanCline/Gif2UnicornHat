@@ -113,7 +113,8 @@ namespace Gif2UnicornHat {
 	}
 
 	
-	void UnicornHatHd::playAnimation(const Animation& animation, const volatile bool* isAbortRequested)
+	void UnicornHatHd::playAnimation(const Animation& animation,
+		const volatile std::sig_atomic_t* isAbortRequested)
 	{
 		// If this is a static image, conserve CPU by only updating the UnicornHat occasionally.
 		if (animation.numLoops() == 0 && animation.numFrames() == 1) {
@@ -121,7 +122,7 @@ namespace Gif2UnicornHat {
 			auto& frame = animation.frames()[0];
 			while (true) {
 				showImage(frame.image);
-				std::this_thread::sleep_for(std::chrono::seconds(5));
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
 				if (isAbortRequested && *isAbortRequested)
 					return;
 			}

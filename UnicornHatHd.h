@@ -29,7 +29,8 @@ namespace Gif2UnicornHat {
 			void setBrightness(double) override;
 			void setOrientation(int) override;
 			void showImage(const Image&) override;
-			void playAnimation(const Animation&, const volatile bool* isAbortRequested = nullptr) override;
+			void playAnimation(const Animation&,
+				const volatile std::sig_atomic_t* isAbortRequested = nullptr) override;
 		
 		private: // Helpers.
 			Dimension getPixelIndex(Dimension x, Dimension y) const;

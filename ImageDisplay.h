@@ -1,5 +1,7 @@
 #pragma once
 
+#include <csignal>
+
 namespace Gif2UnicornHat {
 
 	class Image;
@@ -11,7 +13,8 @@ namespace Gif2UnicornHat {
 		virtual void setBrightness(double) = 0;
 		virtual void setOrientation(int) = 0;
 		virtual void showImage(const Image&) = 0;
-		virtual void playAnimation(const Animation&, const volatile bool* isAbortRequested = nullptr) = 0;
+		virtual void playAnimation(const Animation&,
+			const volatile std::sig_atomic_t* isAbortRequested = nullptr) = 0;
 	};
 
 }

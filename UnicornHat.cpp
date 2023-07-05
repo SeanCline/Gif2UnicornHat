@@ -25,7 +25,10 @@ namespace Gif2UnicornHat {
 		ledstring.channel[0].brightness = 55;
 		ledstring.channel[0].strip_type = WS2811_STRIP_GRB;
 		
-		::ws2811_init(&ledstring);
+		auto initStatus = ::ws2811_init(&ledstring);
+		if (initStatus != WS2811_SUCCESS) {
+			throw std::runtime_error("Failed to initialize WS281x strip.");
+		}
 	}
 
 	UnicornHat::~UnicornHat()
@@ -72,7 +75,8 @@ namespace Gif2UnicornHat {
 	}
 
 	
-	void UnicornHat::playAnimation(const Animation& animation, const volatile bool* isAbortRequested)
+	void UnicornHat::playAnimation(const Animation& animation,
+		const volatile std::sig_atomic_t* isAbortRequested)
 	{
 		// If this is a static image, conserve CPU by only updating the UnicornHat occasionally.
 		if (animation.numLoops() == 0 && animation.numFrames() == 1) {
@@ -80,7 +84,7 @@ namespace Gif2UnicornHat {
 			auto& frame = animation.frames()[0];
 			while (true) {
 				showImage(frame.image);
-				std::this_thread::sleep_for(std::chrono::seconds(5));
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
 				if (isAbortRequested && *isAbortRequested)
 					return;
 			}
